@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
-const {OPENAI_KEY,OPENAI_ORG} = require("../token.json")
+const dotenv = require('dotenv')
+dotenv.config()
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('chat')
@@ -15,8 +16,8 @@ module.exports = {
     await interaction.deferReply({ content: "Let me think..." })
 
     const configuration = new Configuration({
-        apiKey: OPENAI_KEY,
-        organization:OPENAI_ORG
+        apiKey: process.env.APIKEY,
+        organization:process.env.APIORG
     });
     const openai = new OpenAIApi(configuration);
     
@@ -29,9 +30,6 @@ module.exports = {
 		frequency_penalty: 0.0,
 		presence_penalty: 0.0,
     });
-    const picture = await openai.createImage({
-        
-    })
     let responseMessage = '> ' + interaction.options.getString('input') + response.data.choices[0].text;
 
     /* If the response is longer than 2000 characters, it will be sent as a file. */
